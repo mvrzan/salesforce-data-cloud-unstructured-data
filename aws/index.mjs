@@ -10,7 +10,7 @@ export const handler = async (event) => {
     const s3Event = JSON.stringify(event);
 
     // Data Cloud Unstructured data API URL
-    const dataCloudRagNotificationUrl = `https://${dataCloudInstanceUrl}/api/v1/unstructuredIngest?sourceType=aws'`;
+    const dataCloudRagNotificationUrl = `https://${dataCloudInstanceUrl}/api/v1/unstructuredIngest?sourceType=aws`;
 
     // Send data to Data Cloud Unstructured data API endpoint
     const dataCloudUnstructuredCallResponse = await fetch(dataCloudRagNotificationUrl, {
