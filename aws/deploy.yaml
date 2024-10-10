@@ -1,0 +1,72 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: "AWS::Serverless-2016-10-31"
+Resources:
+  DataCloudIngestionFunction:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      Handler: index.handler
+      Runtime: nodejs20.x
+      CodeUri: src/
+      MemorySize: 128
+      Timeout: 30
+      Environment:
+        Variables:
+          SECRET_NAME: DataCloudSecrets
+          DYNAMODB_TABLE_NAME: !Ref DataCloudDynamoDBTable
+      Policies:
+        - Version: "2012-10-17"
+          Statement:
+            - Effect: "Allow"
+              Action:
+                - "secretsmanager:GetSecretValue"
+              Resource: !Ref DataCloudSecretsManagerSecret
+            - Effect: "Allow"
+              Action:
+                - "dynamodb:GetItem"
+                - "dynamodb:PutItem"
+                - "dynamodb:UpdateItem"
+                - "dynamodb:Scan"
+                - "secretsmanager:GetSecretValue"
+              Resource: !GetAtt DataCloudDynamoDBTable.Arn
+
+  DataCloudDynamoDBTable:
+    Type: "AWS::DynamoDB::Table"
+    Properties:
+      TableName: data-cloud-jwt-sam
+      AttributeDefinitions:
+        - AttributeName: "jwt"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "jwt"
+          KeyType: "HASH"
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+
+  # Note that the secret values are just examples and should be replaced with real values
+  DataCloudSecretsManagerSecret:
+    Type: "AWS::SecretsManager::Secret"
+    Properties:
+      Name: DataCloudSecret
+      Description: "Secrets for Data Cloud"
+      SecretString: !Sub |
+        {
+          "CLIENT_ID": "2MO_w2n1AqT7ItBzfdas342fdasf897fdas",
+          "USERNAME": "john.doe@example.com",
+          "LOGIN_URL": "login.salesforce.com",
+          "RSA_PRIVATE_KEY": "V3Q2RQZm93eGFvZW13Vys5OGFnQ1dCQTErZGlNMTkrc...",
+          "INGESTION_SOURCE_API_NAME": "test-api"
+        }
+
+Outputs:
+  DataCloudIngestionFunctionArn:
+    Description: "ARN of the Data Cloud Ingestion Lambda Function"
+    Value: !GetAtt DataCloudIngestionFunction.Arn
+
+  DataCloudDynamoDBTableName:
+    Description: "Name of the created DynamoDB table"
+    Value: !Ref DataCloudDynamoDBTable
+
+  DataCloudSecretsManagerSecretArn:
+    Description: "ARN of the Secrets Manager secret"
+    Value: !Ref DataCloudSecretsManagerSecret
