@@ -23,7 +23,7 @@ const client = new SecretsManagerClient({
   region: "us-east-2",
 });
 
-export const getSfToken = async () => {
+export const getToken = async () => {
   try {
     // check if the secret is empty
     if (!secret) {
