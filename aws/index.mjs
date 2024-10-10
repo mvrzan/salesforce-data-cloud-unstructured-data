@@ -31,7 +31,7 @@ export const handler = async (event) => {
     }
 
     const data = await dataCloudUnstructuredCallResponse.json();
-    console.log("Data Cloud Unstructured API call successful", dataCloudUnstructuredCallResponse);
+
     console.log("Data Cloud Unstructured API response data:", data);
   } catch (error) {
     console.error("Error has occurred:", error);
