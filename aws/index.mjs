@@ -1,12 +1,12 @@
 /* global fetch */
 
-import { getSfToken } from "./utils/getSfToken.mjs";
+import { getToken } from "./src/utils/getToken.mjs";
 
 export const handler = async (event) => {
   try {
     console.log("Lambda Function handler called");
     console.log("S3 event:", JSON.stringify(event));
-    const { token, dataCloudInstanceUrl } = await getSfToken();
+    const { token, dataCloudInstanceUrl } = await getToken();
     const s3Event = JSON.stringify(event);
 
     // Data Cloud Unstructured data API URL
