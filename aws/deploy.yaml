@@ -1,4 +1,3 @@
-AWSTemplateFormatVersion: "2010-09-09"
 Transform: "AWS::Serverless-2016-10-31"
 Resources:
   DataCloudIngestionFunction:
@@ -13,6 +12,7 @@ Resources:
         Variables:
           SECRET_NAME: DataCloudSecrets
           DYNAMODB_TABLE_NAME: !Ref DataCloudDynamoDBTable
+          S3_BUCKET_NAME: !Ref DataCloudS3Bucket
       Policies:
         - Version: "2012-10-17"
           Statement:
@@ -26,8 +26,20 @@ Resources:
                 - "dynamodb:PutItem"
                 - "dynamodb:UpdateItem"
                 - "dynamodb:Scan"
-                - "secretsmanager:GetSecretValue"
               Resource: !GetAtt DataCloudDynamoDBTable.Arn
+            - Effect: "Allow"
+              Action:
+                - "s3:GetObject"
+                - "s3:PutObject"
+                - "s3:DeleteObject"
+                - "s3:ListBucket"
+                - "s3:GetBucketNotification"
+                - "s3:PutBucketNotification"
+              Resource: !Sub "arn:aws:s3:::${DataCloudS3Bucket}/*"
+            - Effect: "Allow"
+              Action:
+                - "lambda:InvokeFunction"
+              Resource: !GetAtt DataCloudIngestionFunction.Arn
 
   DataCloudDynamoDBTable:
     Type: "AWS::DynamoDB::Table"
@@ -43,7 +55,6 @@ Resources:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
 
-  # Note that the secret values are just examples and should be replaced with real values
   DataCloudSecretsManagerSecret:
     Type: "AWS::SecretsManager::Secret"
     Properties:
@@ -58,6 +69,23 @@ Resources:
           "INGESTION_SOURCE_API_NAME": "test-api"
         }
 
+  DataCloudS3Bucket:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      BucketName: !Sub "rag-test-data-cloud-${AWS::AccountId}"
+      NotificationConfiguration:
+        LambdaConfigurations:
+          - Event: "s3:ObjectCreated:*"
+            Function: !GetAtt DataCloudIngestionFunction.Arn
+
+  LambdaInvokePermission:
+    Type: "AWS::Lambda::Permission"
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt DataCloudIngestionFunction.Arn
+      Principal: "s3.amazonaws.com"
+      SourceArn: !Sub "arn:aws:s3:::${DataCloudS3Bucket}"
+
 Outputs:
   DataCloudIngestionFunctionArn:
     Description: "ARN of the Data Cloud Ingestion Lambda Function"
@@ -70,3 +98,7 @@ Outputs:
   DataCloudSecretsManagerSecretArn:
     Description: "ARN of the Secrets Manager secret"
     Value: !Ref DataCloudSecretsManagerSecret
+
+  DataCloudS3BucketName:
+    Description: "Name of the created S3 bucket"
+    Value: !Ref DataCloudS3Bucket
