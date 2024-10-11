@@ -1,6 +1,63 @@
 Transform: "AWS::Serverless-2016-10-31"
 Resources:
-  DataCloudIngestionFunction:
+  DataCloudS3Bucket:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      BucketName: !Sub "rag-bucket-data-cloud-${AWS::StackName}"
+      NotificationConfiguration:
+        LambdaConfigurations:
+          - Event: "s3:ObjectCreated:*"
+            Function: !GetAtt DataCloudNotificationFunction.Arn
+
+  DataCloudRagRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Principal:
+              Service: "lambda.amazonaws.com"
+            Action: "sts:AssumeRole"
+      Policies:
+        - PolicyName: "DataCloudRagPolicy"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - "secretsmanager:GetSecretValue"
+                Resource: !Ref DataCloudSecretsManagerSecret
+              - Effect: "Allow"
+                Action:
+                  - "dynamodb:GetItem"
+                  - "dynamodb:PutItem"
+                  - "dynamodb:UpdateItem"
+                  - "dynamodb:Scan"
+                Resource: !GetAtt DataCloudDynamoDBTable.Arn
+              - Effect: "Allow"
+                Action:
+                  - "s3:GetObject"
+                  - "s3:PutObject"
+                  - "s3:List*"
+                  - "s3:Get*"
+                  - "s3:DeleteObject"
+                  - "s3:ListBucket"
+                  - "s3:GetBucketNotification"
+                  - "s3:PutBucketNotification"
+                Resource: !Sub "arn:aws:s3:::rag-test-data-cloud/*"
+              - Effect: "Allow"
+                Action:
+                  - "lambda:InvokeFunction"
+                Resource: "*"
+              - Effect: "Allow"
+                "Action":
+                  - "logs:CreateLogGroup"
+                  - "logs:CreateLogStream"
+                  - "logs:PutLogEvents"
+                Resource: "*"
+
+  DataCloudNotificationFunction:
     Type: "AWS::Serverless::Function"
     Properties:
       Handler: index.handler
@@ -8,42 +65,24 @@ Resources:
       CodeUri: src/
       MemorySize: 128
       Timeout: 30
+      Role: !GetAtt DataCloudRagRole.Arn
       Environment:
         Variables:
-          SECRET_NAME: DataCloudSecrets
+          SECRET_NAME: DataCloudSecretsManagerSecret
           DYNAMODB_TABLE_NAME: !Ref DataCloudDynamoDBTable
-      Policies:
-        - Version: "2012-10-17"
-          Statement:
-            - Effect: "Allow"
-              Action:
-                - "secretsmanager:GetSecretValue"
-              Resource: !Ref DataCloudSecretsManagerSecret
-            - Effect: "Allow"
-              Action:
-                - "dynamodb:GetItem"
-                - "dynamodb:PutItem"
-                - "dynamodb:UpdateItem"
-                - "dynamodb:Scan"
-              Resource: !GetAtt DataCloudDynamoDBTable.Arn
-            - Effect: "Allow"
-              Action:
-                - "s3:GetObject"
-                - "s3:PutObject"
-                - "s3:DeleteObject"
-                - "s3:ListBucket"
-                - "s3:GetBucketNotification"
-                - "s3:PutBucketNotification"
-              Resource: !Sub "arn:aws:s3:::${DataCloudS3Bucket}/*"
-            - Effect: "Allow"
-              Action:
-                - "lambda:InvokeFunction"
-              Resource: !GetAtt DataCloudIngestionFunction.Arn
+
+  LambdaInvokePermission:
+    Type: "AWS::Lambda::Permission"
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt DataCloudNotificationFunction.Arn
+      Principal: "s3.amazonaws.com"
+      SourceArn: !GetAtt DataCloudS3Bucket.Arn
 
   DataCloudDynamoDBTable:
     Type: "AWS::DynamoDB::Table"
     Properties:
-      TableName: data-cloud-jwt-sam
+      TableName: !Sub "rag-data-cloud-${AWS::StackName}"
       AttributeDefinitions:
         - AttributeName: "jwt"
           AttributeType: "S"
@@ -57,7 +96,7 @@ Resources:
   DataCloudSecretsManagerSecret:
     Type: "AWS::SecretsManager::Secret"
     Properties:
-      Name: DataCloudSecret
+      Name: !Sub "rag-test-data-cloud-${AWS::StackName}"
       Description: "Secrets for Data Cloud"
       SecretString: !Sub |
         {
@@ -68,27 +107,10 @@ Resources:
           "INGESTION_SOURCE_API_NAME": "test-api"
         }
 
-  DataCloudS3Bucket:
-    Type: "AWS::S3::Bucket"
-    Properties:
-      BucketName: !Sub "rag-test-data-cloud-${AWS::AccountId}"
-      NotificationConfiguration:
-        LambdaConfigurations:
-          - Event: "s3:ObjectCreated:*"
-            Function: !GetAtt DataCloudIngestionFunction.Arn
-
-  LambdaInvokePermission:
-    Type: "AWS::Lambda::Permission"
-    Properties:
-      Action: "lambda:InvokeFunction"
-      FunctionName: !GetAtt DataCloudIngestionFunction.Arn
-      Principal: "s3.amazonaws.com"
-      SourceArn: !Sub "arn:aws:s3:::${DataCloudS3Bucket}"
-
 Outputs:
-  DataCloudIngestionFunctionArn:
-    Description: "ARN of the Data Cloud Ingestion Lambda Function"
-    Value: !GetAtt DataCloudIngestionFunction.Arn
+  DataCloudNotificationFunctionArn:
+    Description: "ARN of the Data Cloud Notification Lambda Function"
+    Value: !GetAtt DataCloudNotificationFunction.Arn
 
   DataCloudDynamoDBTableName:
     Description: "Name of the created DynamoDB table"
