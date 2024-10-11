@@ -30,6 +30,18 @@ This project showcases how to configure an S3 notification pipeline with Data Cl
 
 TODO
 
+The provided node.js function handles the following:
+
+- Detects the incoming S3 file upload notification/event
+- Reads from DynamoDB for the token value and expiration
+- If the token has expired, it fetches sensitive environment variables from the Secrets Manager
+- Fetches the Salesforce Access Token
+- Exchanges the Salesforce Access Token for Data Cloud Access Token
+- Caches the new token into the non-SQL database for future use
+- Finally, it sends the S3 notification event to the Data Cloud unstructured API
+
+After this flow is finished, Data Cloud will use the configured S3 connection to download the uploaded file into Data Cloud to perform vectorization of the unstructured file. The results of this operation are then seen in the [Unstructured Data Lake Objects (UDLOs)](https://help.salesforce.com/s/articleView?id=sf.c360_a_unstructured_data_udlo_overview.htm&language=en_US&type=5).
+
 ## How does it work?
 
 ### Architecture diagram
