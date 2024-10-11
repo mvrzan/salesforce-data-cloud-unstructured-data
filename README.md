@@ -28,7 +28,11 @@ This project showcases how to configure an S3 notification pipeline with Data Cl
 
 ## What does it do?
 
-TODO
+Data Cloud has the capability to [bring unstructured data into Data Cloud](https://help.salesforce.com/s/articleView?id=sf.c360_a_unstructured_data_connect_overview.htm&type=5). It achieves this by [sending an upload file notification](https://help.salesforce.com/s/articleView?id=sf.c360_a_unstructured_data_creating_file_notifications.htm&type=5) from an external blob store (AWS, Azure, or GCP) to Data Cloud's unstructured endpoint.
+
+It is worth mentioning that there is an [official documentation](https://help.salesforce.com/s/articleView?id=sf.c360_a_unstructured_data_s3_create_file_notification.htm&type=5) on how to create a notificaiton pipeline within AWS via a [bash script](https://github.com/forcedotcom/file-notifier-for-blob-store/tree/main/installers/aws) and a [python lambda function](https://github.com/forcedotcom/file-notifier-for-blob-store/blob/main/cloud_function_zips/aws_lambda_function.zip).
+
+The main difference with this project is that it is using AWS SAM template to deployemnt rather than a bash script and the Lambda function is written in node rather than python.
 
 The provided node.js function handles the following:
 
