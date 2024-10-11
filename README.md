@@ -1,4 +1,21 @@
-# salesforce-data-cloud-unstructured-data
+# Data Cloud and Unstructured Data Ingestion
+
+This project showcases how to configure an S3 notification pipeline with Data Cloud's Unstructured endpoint with JavaScript and AWS SAM.
+
+# Table of Contents
+
+- [Data Cloud and Unstructured Data Ingestion](#data-cloud-and-unstructured-data-ingestion)
+- [Table of Contents](#table-of-contents)
+- [Configuration](#configuration)
+  - [Requirements](#requirements)
+  - [Deployment to AWS](#deployment-to-aws)
+    - [Where to get the variables](#where-to-get-the-variables)
+    - [YAML template updates](#yaml-template-updates)
+    - [AWS SAM deployment](#aws-sam-deployment)
+- [License](#license)
+- [Disclaimer](#disclaimer)
+
+---
 
 # Configuration
 
