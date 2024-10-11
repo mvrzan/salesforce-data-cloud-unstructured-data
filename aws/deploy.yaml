@@ -68,7 +68,7 @@ Resources:
       Role: !GetAtt DataCloudRagRole.Arn
       Environment:
         Variables:
-          SECRET_NAME: DataCloudSecretsManagerSecret
+          SECRET_NAME: !Ref DataCloudSecretsManagerSecret
           DYNAMODB_TABLE_NAME: !Ref DataCloudDynamoDBTable
 
   LambdaInvokePermission:
