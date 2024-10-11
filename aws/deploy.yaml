@@ -12,7 +12,6 @@ Resources:
         Variables:
           SECRET_NAME: DataCloudSecrets
           DYNAMODB_TABLE_NAME: !Ref DataCloudDynamoDBTable
-          S3_BUCKET_NAME: !Ref DataCloudS3Bucket
       Policies:
         - Version: "2012-10-17"
           Statement:
