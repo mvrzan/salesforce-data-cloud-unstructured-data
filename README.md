@@ -4,13 +4,14 @@
 
 ## Requirements
 
-TODO
+In order to test this out, you will need several things:
+
+- A valid [AWS account](https://aws.amazon.com/)
+- A Salesforce account with [Data Cloud](https://www.salesforce.com/data/) deployed
 
 ## Deployment to AWS
 
 As stated before, this is a simple example how to deploy this solution to AWS using the Serverless Application Model, also known as SAM. In this walkthrough, the [AWS CloudShell](https://docs.aws.amazon.com/cloudshell/latest/userguide/getting-started.html) will be used instead of a local terminal.
-
-> Before you begin, please ensure you have a valid AWS account.
 
 The first step is to update the `template.yaml` file with your environment-specific secrets. The following values need to be updated in the `template.yaml` file:
 
@@ -116,3 +117,5 @@ That is it! You have successfully deployed this project into an AWS account usin
 [MIT](http://www.opensource.org/licenses/mit-license.html)
 
 # Disclaimer
+
+This software is to be considered "sample code", a Type B Deliverable, and is delivered "as-is" to the user. Salesforce bears no responsibility to support the use or implementation of this software.
