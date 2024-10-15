@@ -60,6 +60,8 @@ In order to test this out, you will need several things:
 
 - A valid [AWS account](https://aws.amazon.com/)
 - A Salesforce account with [Data Cloud](https://www.salesforce.com/data/) deployed
+- A [Basic Connected App](https://help.salesforce.com/s/articleView?id=sf.connected_app_create_basics.htm&type=5) within Salesforce
+- [Enable Oauth settings for the API integration](https://help.salesforce.com/s/articleView?id=sf.connected_app_create_api_integration.htm&type=5)
 
 ## Deployment to AWS
 
