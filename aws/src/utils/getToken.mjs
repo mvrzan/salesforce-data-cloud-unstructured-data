@@ -20,7 +20,7 @@ const tableName = process.env.DYNAMODB_TABLE_NAME;
 // initialize AWS Secrets Manager client
 const secret_name = process.env.SECRET_NAME;
 const client = new SecretsManagerClient({
-  region: "us-east-2",
+  region: process.env.SECRET_REGION,
 });
 
 export const getToken = async () => {
