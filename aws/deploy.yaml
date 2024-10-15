@@ -70,6 +70,7 @@ Resources:
         Variables:
           SECRET_NAME: !Ref DataCloudSecretsManagerSecret
           DYNAMODB_TABLE_NAME: !Ref DataCloudDynamoDBTable
+          SECRET_REGION: !Ref AWS::Region
 
   LambdaInvokePermission:
     Type: "AWS::Lambda::Permission"
@@ -77,7 +78,7 @@ Resources:
       Action: "lambda:InvokeFunction"
       FunctionName: !GetAtt DataCloudNotificationFunction.Arn
       Principal: "s3.amazonaws.com"
-      SourceArn: !GetAtt DataCloudS3Bucket.Arn
+      SourceArn: !Sub "arn:aws:s3:::rag-bucket-data-cloud-${AWS::StackName}"
 
   DataCloudDynamoDBTable:
     Type: "AWS::DynamoDB::Table"
