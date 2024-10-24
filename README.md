@@ -162,8 +162,6 @@ This step will guide you through the deployment and ask the following questions:
 
 ```
 
-Once the deployment is successful, you will see the endpoint URL in the terminal output section and you can send your requests there!
-
 That is it! You have successfully deployed this project into an AWS account using SAM. Once this is done, you will fined the appropriate resources created within your AWS account. Now you can navigate to your newly created S3 bucket and upload a file to be picked up by Data Cloud's vectorization process.
 
 # License
