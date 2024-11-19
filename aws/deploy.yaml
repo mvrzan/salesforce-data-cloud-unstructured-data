@@ -104,8 +104,7 @@ Resources:
           "CLIENT_ID": "2MO_w2n1AqT7ItBzfdas342fdasf897fdas",
           "USERNAME": "john.doe@example.com",
           "LOGIN_URL": "login.salesforce.com",
-          "RSA_PRIVATE_KEY": "V3Q2RQZm93eGFvZW13Vys5OGFnQ1dCQTErZGlNMTkrc...",
-          "INGESTION_SOURCE_API_NAME": "test-api"
+          "RSA_PRIVATE_KEY": "V3Q2RQZm93eGFvZW13Vys5OGFnQ1dCQTErZGlNMTkrc..."
         }
 
 Outputs:
