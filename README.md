@@ -111,17 +111,18 @@ This encoded string is going to be your `RSA_PRIVATE_KEY` variable.
 
 Once you have all the variables in your `template.yaml` file, save the file and proceed to the next step.
 
-The next step is to zip the contents of the `aws/` folder. This means you will zip the following files and folders:
+The next step is to zip the `aws` folder. This means you will zip the following files and folders:
 
 ```
-template.yaml
-node_modules/
-src/
- |-- utils
-        |-- getToken.mjs
-index.mjs
-package.json
-package-lock.json
+aws
+  |-- template.yaml
+  |-- node_modules/
+  |-- src/
+        |-- utils
+              |-- getToken.mjs
+  |-- index.mjs
+  |-- package.json
+  |-- package-lock.json
 ```
 
 > Does this structure matter? Yes, it does matter as a specific folder structure has to be followed when uploading a Lambda function.
@@ -136,6 +137,7 @@ Run the following commands in the CloudShell:
 
 ```
 unzip <name-of-your-zip-file>
+cd <name-of-your-unzipped-folder>
 sam build
 ```
 
