@@ -109,12 +109,12 @@ This encoded string is going to be your `RSA_PRIVATE_KEY` variable.
 
 ### YAML template updates
 
-Once you have all the variables in your `deploy.yaml` file, save the file and proceed to the next step.
+Once you have all the variables in your `template.yaml` file, save the file and proceed to the next step.
 
 The next step is to zip the contents of the `aws/` folder. This means you will zip the following files and folders:
 
 ```
-deploy.yaml
+template.yaml
 node_modules/
 src/
  |-- utils
