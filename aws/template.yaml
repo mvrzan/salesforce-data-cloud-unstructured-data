@@ -3,10 +3,12 @@ Resources:
   DataCloudS3Bucket:
     Type: "AWS::S3::Bucket"
     Properties:
-      BucketName: !Sub "rag-bucket-data-cloud-${AWS::StackName}"
+      BucketName: !Sub "rag-data-cloud-${AWS::StackName}"
       NotificationConfiguration:
         LambdaConfigurations:
           - Event: "s3:ObjectCreated:*"
+            Function: !GetAtt DataCloudNotificationFunction.Arn
+          - Event: "s3:ObjectRemoved:*"
             Function: !GetAtt DataCloudNotificationFunction.Arn
 
   DataCloudRagRole:
@@ -78,7 +80,7 @@ Resources:
       Action: "lambda:InvokeFunction"
       FunctionName: !GetAtt DataCloudNotificationFunction.Arn
       Principal: "s3.amazonaws.com"
-      SourceArn: !Sub "arn:aws:s3:::rag-bucket-data-cloud-${AWS::StackName}"
+      SourceArn: !Sub "arn:aws:s3:::rag-data-cloud-${AWS::StackName}"
 
   DataCloudDynamoDBTable:
     Type: "AWS::DynamoDB::Table"
