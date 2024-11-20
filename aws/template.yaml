@@ -95,6 +95,9 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
+      TimeToLiveSpecification:
+        AttributeName: "expires_at"
+        Enabled: true
 
   DataCloudSecretsManagerSecret:
     Type: "AWS::SecretsManager::Secret"
