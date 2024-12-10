@@ -32,7 +32,7 @@ Data Cloud has the capability to [bring unstructured data into Data Cloud](https
 
 It is worth mentioning that there is an [official documentation](https://help.salesforce.com/s/articleView?id=sf.c360_a_unstructured_data_s3_create_file_notification.htm&type=5) on how to create a notificaiton pipeline within AWS via a [bash script](https://github.com/forcedotcom/file-notifier-for-blob-store/tree/main/installers/aws) and a [python lambda function](https://github.com/forcedotcom/file-notifier-for-blob-store/blob/main/cloud_function_zips/aws_lambda_function.zip).
 
-The main difference with this project is that it is using AWS SAM template to deployemnt rather than a bash script and the Lambda function is written in node rather than python.
+The main difference with this project is that it is using AWS SAM template for deployment rather than a bash script and the Lambda function is written in node rather than python.
 
 The provided node.js function handles the following:
 
