@@ -73,6 +73,13 @@ export const getToken = async () => {
         exp: Math.round(Date.now() / 1000),
       };
 
+      // alternative Oauth payload
+      // const alternativePayload = new URLSearchParams({
+      //   grant_type: "client_credentials",
+      //   client_id: secret.CLIENT_ID,
+      //   client_secret: secret.CLIENT_SECRET,
+      // });
+
       // decode base64 encoded rsa key from the AWS Secret Manager
       const rsaKey = Buffer.from(secret.RSA_PRIVATE_KEY, "base64").toString("ascii");
 
@@ -94,6 +101,7 @@ export const getToken = async () => {
           "Content-Type": "application/x-www-form-urlencoded",
         },
         body: salesforceCrmTokenPayload,
+        // body: alternativePayload,
       });
 
       if (!salesforceCrmResponse.ok) {
