@@ -67,6 +67,13 @@ In order to test this out, you will need several things:
 
 As stated before, this is a simple example how to deploy this solution to AWS using the Serverless Application Model, also known as SAM. In this walkthrough, the [AWS CloudShell](https://docs.aws.amazon.com/cloudshell/latest/userguide/getting-started.html) will be used instead of a local terminal.
 
+> NOTE: Read before you begin.
+> In this example, the Connected App is configured to use a JWT and it uses the RSA_Private_Key. If you want to use a simple Oauth Flow, you will have to update the following:
+>
+> - update the [YAML file](./aws/template.yaml#108) with your `CLIENT_ID` and `CLIENT_SECRET`
+> - update the [code logic](./aws/src/utils/getToken.mjs#77) to use the alternative payload. Uncomment the commented code
+> - update the [code logic](./aws/src/utils/getToken.mjs#104) to send the altreantive payload instead of the previous payload. Make sure you comment or remove the previous line
+
 The first step is to update the `template.yaml` file with your environment-specific secrets. The following values need to be updated in the `template.yaml` file:
 
 ```
